@@ -39,7 +39,7 @@ namespace MVVM
             dt.Rows.Add(r2);
             this.Dv = dt.DefaultView;
             dt.DefaultView[0]["Id"] = 4;
-            var aa = 1;
+            var bb = 22;
 
         }
         #endregion
