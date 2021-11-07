@@ -1,0 +1,224 @@
+﻿<mah:MetroWindow x:Class="MVVM.MainWindow"
+                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                 xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                 xmlns:local="clr-namespace:MVVM"
+                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                 Title="MainWindow"
+                 Width="800"
+                 Height="450"
+                 WindowStartupLocation="CenterScreen"
+                 mc:Ignorable="d">
+    <mah:MetroWindow.Resources>
+        <Style x:Key="DataGridRowStyle"
+               TargetType="{x:Type DataGridRow}">
+            <Setter Property="Margin"
+                    Value="0" />
+            <Setter Property="SnapsToDevicePixels"
+                    Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridRow}">
+                        <Border x:Name="DGR_Border"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                            <SelectiveScrollingGrid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <DataGridCellsPresenter Grid.Column="1"
+                                                        ItemsPanel="{TemplateBinding ItemsPanel}"
+                                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+
+                                <DataGridDetailsPresenter Grid.Row="1"
+                                                          Grid.Column="1"
+                                                          SelectiveScrollingGrid.SelectiveScrollingOrientation="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=AreRowDetailsFrozen, FallbackValue={x:Static SelectiveScrollingOrientation.Both}, TargetNullValue={x:Static SelectiveScrollingOrientation.Both}, Converter={x:Static DataGrid.RowDetailsScrollingConverter}, ConverterParameter={x:Static SelectiveScrollingOrientation.Vertical}}"
+                                                          Visibility="{TemplateBinding DetailsVisibility}" />
+
+                                <DataGridRowHeader Grid.Row="0"
+                                                   Grid.RowSpan="2"
+                                                   Grid.Column="0"
+                                                   SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical"
+                                                   Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=HeadersVisibility, FallbackValue={x:Static Visibility.Visible}, TargetNullValue={x:Static Visibility.Visible}, Converter={x:Static DataGrid.HeadersVisibilityConverter}, ConverterParameter={x:Static DataGridHeadersVisibility.Row}}" />
+                            </SelectiveScrollingGrid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Validation.ErrorTemplate"
+                    Value="{x:Null}" />
+            <Setter Property="ValidationErrorTemplate"
+                    Value="{StaticResource MahApps.Templates.DataGridRow.ValidationError}" />
+            <Setter Property="mah:DataGridHelper.CellPadding"
+                    Value="{Binding Path=(mah:DataGridHelper.CellPadding), FallbackValue=0, TargetNullValue=0, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+            <Setter Property="mah:DataGridHelper.SelectionUnit"
+                    Value="{Binding Path=SelectionUnit, FallbackValue={x:Static DataGridSelectionUnit.FullRow}, TargetNullValue={x:Static DataGridSelectionUnit.FullRow}, Mode=OneWay, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}" />
+            <Style.Triggers>
+                <Trigger Property="IsNewItem"
+                         Value="True">
+                    <Setter Property="Margin"
+                            Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=NewItemMargin}" />
+                </Trigger>
+
+                <!--  IsSelected  -->
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="mah:DataGridHelper.SelectionUnit"
+                                   Value="FullRow" />
+                        <Condition Property="IsSelected"
+                                   Value="True" />
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background"
+                            Value="{DynamicResource MahApps.Brushes.DataGrid.Selection.Background}" />
+                    <Setter Property="BorderBrush"
+                            Value="{DynamicResource MahApps.Brushes.DataGrid.Selection.BorderBrush}" />
+                    <Setter Property="Foreground"
+                            Value="{DynamicResource MahApps.Brushes.DataGrid.Selection.Text}" />
+                </MultiTrigger>
+
+                <!--  IsSelected and Selector.IsSelectionActive  -->
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="mah:DataGridHelper.SelectionUnit"
+                                   Value="FullRow" />
+                        <Condition Property="IsSelected"
+                                   Value="True" />
+                        <Condition Property="Selector.IsSelectionActive"
+                                   Value="False" />
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background"
+                            Value="{DynamicResource MahApps.Brushes.DataGrid.Selection.Background.Inactive}" />
+                    <Setter Property="BorderBrush"
+                            Value="{DynamicResource MahApps.Brushes.DataGrid.Selection.BorderBrush.Inactive}" />
+                    <Setter Property="Foreground"
+                            Value="{DynamicResource MahApps.Brushes.DataGrid.Selection.Text.Inactive}" />
+                </MultiTrigger>
+
+                <!--  IsMouseOver  -->
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="mah:DataGridHelper.SelectionUnit"
+                                   Value="FullRow" />
+                        <Condition Property="IsMouseOver"
+                                   Value="True" />
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background"
+                            Value="{DynamicResource MahApps.Brushes.DataGrid.Selection.Background.MouseOver}" />
+                    <Setter Property="BorderBrush"
+                            Value="{DynamicResource MahApps.Brushes.DataGrid.Selection.BorderBrush.MouseOver}" />
+                    <Setter Property="Foreground"
+                            Value="{DynamicResource MahApps.Brushes.DataGrid.Selection.Text.MouseOver}" />
+                </MultiTrigger>
+
+                <!--  IsEnabled  -->
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="mah:DataGridHelper.SelectionUnit"
+                                   Value="FullRow" />
+                        <Condition Property="IsEnabled"
+                                   Value="False" />
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Foreground"
+                            Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+                </MultiTrigger>
+
+                <!--  IsEnabled and IsSelected  -->
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="mah:DataGridHelper.SelectionUnit"
+                                   Value="FullRow" />
+                        <Condition Property="IsEnabled"
+                                   Value="False" />
+                        <Condition Property="IsSelected"
+                                   Value="True" />
+                    </MultiTrigger.Conditions>
+                    <Setter Property="Background"
+                            Value="{DynamicResource MahApps.Brushes.DataGrid.Selection.Background.Disabled}" />
+                    <Setter Property="BorderBrush"
+                            Value="{DynamicResource MahApps.Brushes.DataGrid.Selection.BorderBrush.Disabled}" />
+                    <Setter Property="Foreground"
+                            Value="{DynamicResource MahApps.Brushes.DataGrid.Selection.Text.Disabled}" />
+                </MultiTrigger>
+
+            </Style.Triggers>
+        </Style>
+        <local:BlackgroundConverter x:Key="BlackgroundConverter"></local:BlackgroundConverter>
+    </mah:MetroWindow.Resources>
+    <Grid Background="White">
+        
+        <ListBox Name="listBox1" SelectionMode="Multiple">
+  <CheckBox Selector.IsSelected="True" 
+            IsChecked="{Binding RelativeSource={RelativeSource Self}, 
+                        Path=(Selector.IsSelected), Mode=TwoWay}">
+    CheckBox.IsChecked is bound to Selector.IsChecked, which is set only
+    once.
+  </CheckBox>
+
+  <CheckBox ListBox.IsSelected="True" 
+            IsChecked="{Binding RelativeSource={RelativeSource 
+                        AncestorType={x:Type ListBoxItem}}, 
+                        Path=IsSelected, Mode=TwoWay}">
+    CheckBox.IsChecked is bound to ListBoxItem.IsChecked, which is
+    updated throughout the duration of the application.
+  </CheckBox>
+</ListBox>
+        <!--<DataGrid ItemsSource="{Binding Dv}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False">
+            <DataGrid.Columns>
+                <local:DataGridNumericColumn Header="Id"
+                                             Width="80"
+                                             Binding="{Binding Id}" />
+                <DataGridTextColumn Header="Name"
+                                    Width="80"
+                                    Binding="{Binding Name}" />
+                <DataGridTextColumn Header="Enabled"
+                                    Width="80"
+                                    Binding="{Binding Enabled}" />
+            </DataGrid.Columns>
+            <DataGrid.RowStyle>
+                --><!--<Style BasedOn="{StaticResource DataGridRowStyle}" TargetType="{x:Type DataGridRow}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Enabled, Mode=OneWay}" Value="1">
+                            <Setter Property="Background" Value="#FF8B8B" />
+                            <Setter Property="Foreground" Value="DarkRed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>--><!--
+                <Style TargetType="DataGridRow">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Enabled, Mode=OneWay}"
+                                     Value="0">
+                            <Setter Property="Foreground"
+                                    Value="Gray" />
+                        </DataTrigger>
+                        <Trigger Property="IsMouseOver"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="#FFC9C3C3" />
+                            <Setter Property="Foreground"
+                                    Value="White" />
+                        </Trigger>
+                        <Trigger Property="IsSelected"
+                                 Value="True">
+                            <Setter Property="Background"
+                                    Value="#FFC9C3C3" />
+                            <Setter Property="Foreground"
+                                    Value="White" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+        </DataGrid>-->
+    </Grid>
+</mah:MetroWindow>
