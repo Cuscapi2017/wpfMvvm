@@ -40,6 +40,7 @@ namespace MVVM
             this.Dv = dt.DefaultView;
             dt.DefaultView[0]["Id"] = 4;
             var aa = 1;
+            var cc = 3;
 
         }
         #endregion
